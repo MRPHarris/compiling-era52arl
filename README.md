@@ -9,7 +9,7 @@ It is theoretically possible to do all of this on Windows but I do not recommend
 ### Notes
 - Commands to be written in the terminal are bounded by ` `, but should be copied without the bounding punctuation.
 - The `sudo` command prefix will execute an action as the root user, bypassing typical ‘permission denied’ problems. This may or may not be required depending on where you have decided to compile/install/make the various programs in this guide.
-- To copy a folder and all its contents use `sudo cp -p -f -r /path/to/source/* /path/to/dest’
+- To copy a folder and all its contents use `sudo cp -p -f -r /path/to/source/* /path/to/dest`
 
 Created using Linux Mint Cinnamon 21.1 (64-bit). Adjustments may be needed for other linux distributions.
 
@@ -37,7 +37,7 @@ Created using Linux Mint Cinnamon 21.1 (64-bit). Adjustments may be needed for o
       - Cd into build directory: `cd build`
       - Use cmake to make the build:
            - `sudo cmake -S /opt/libaec-v1.0.6 -D CMAKE_INSTALL_PREFIX=/opt/libaec`
-      - Install: ‘sudo make install’
+      - Install: `sudo make install`
       - Clean up; delete both the source and binaries from the /opt folder using e.g. `sudo rm -r /opt/build`
 5. Insall the OpenJPG library: https://github.com/uclouvain/openjpeg. Note: this may or may not be necessary; I couldn’t figure out if cmake was actually using the openjpeg library I specified. 
       - As with AEC, the method here uses cmake.
