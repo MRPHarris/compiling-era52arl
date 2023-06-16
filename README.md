@@ -114,11 +114,11 @@ Created using Linux Mint Cinnamon 21.1 (64-bit). Adjustments may be needed for o
       - The project called ‘metprog’ contains all the data needed for the libhysplit
       - Open the terminal within the metprog folder.
            - If hysplit_data2arl is in the /opt/ folder, `cd /opt/hysplit_data2arl/metprog/library`
-Modify the makefile to suit your system.
-Open the Makefile inside /opt/hysplit_data2arl/metprog/library inside a suitable editor. I used Visual Studio Code. 
-If  the folder structure is left as a default, you just need to direct this makefile to the ‘include’ makefile inside the first data2arl directory. 
-To do this, change the line:
-include ../../Makefile.inc
+      - Modify the makefile to suit your system.
+           - Open the Makefile inside /opt/hysplit_data2arl/metprog/library inside a suitable editor. I used Visual Studio Code. 
+           - If the folder structure is left as a default, you just need to direct this makefile to the ‘include’ makefile inside the first data2arl directory. 
+           - To do this, change the line:
+               - include ../../Makefile.inc
 To:
 include /opt/hysplit_data2arl/Makefile.inc.gfortran
 Save the Makefile
