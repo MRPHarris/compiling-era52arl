@@ -1,0 +1,260 @@
+This text file details my attempts to compile the ECMWF eccodes library on a Windows 10 PC, with the ultimate goal of compiling the era52arl program from NOAA ARL.
+
+Author: Matt Harris
+Contact: matthew.harris@unsw.edu.au
+Last edited: 2023-06-16 (formatting)
+
+I tried two routes for making, then installing, the eccodes libraries on Windows via Cmake.
+
+1) Windows Visual Studio 2022 with Ninja (integrated build tool) and the Intel OneAPI HPC fortran compiler
+
+2) MSYS2 WinGW build tools ('Unix Makefiles')
+
+I focus here on (1) as that is the one I successfully got to work. MSYS and WinGW would be great as they do not require the enormous intel API, but I could not compile with them. There seems
+to be an oddity in the eccodes code that assumes a windows compilation uses visual studio. 
+
+1) Enable WSL to get bash.exe 
+	- Follow this guide to install the Windows Subsystem for Linux (WSL) and enable bash.exe: https://www.laptopmag.com/articles/use-bash-shell-windows-10
+	- Another guide (processes are identical): https://hackernoon.com/how-to-install-bash-on-windows-10-lqb73yj3
+	- If that guide no longer exists, search for 'enabling bash on windows 10'. 
+	- After this process is complete, you should find a program called 'bash.exe' at C:/Windows/System32/bash.exe
+
+2) Download Visual Studio 2022. https://visualstudio.microsoft.com/vs/
+	- Make sure when installing you choose to install the C++ development module as well. This includes various cmake functionalities.
+	- If compining with VS2022, you should also install the Intel Base and HPC tool kits that include the intel fortran compilers.
+
+3) Download the ECMWF eccodes source code.
+	- https://confluence.ecmwf.int/display/ECC/Releases
+	- It will come as a tar.gz file. This is a 'tarball' that is double-zipped. Make a clean folder (nothing else in it) then unzip the contents using e.g. 7zip (extract archive of the .gz then the .tar to the clean folder).
+	- A simple source folder location would be C:\projects\eccodes
+	- From here on, {source_path} will refer to the folder you unpacked the eccodes source code into (for me, C:\projects\eccodes)
+
+4) Install cmake
+	- https://cmake.org/
+	- Follow all the steps, and try launching the GUI program to make sure the install has worked.
+	- Next, add the cmake bin folder to the system PATH so windows knows where to find the program. 
+	- To do this, right click on Computer (or This PC) in Windows Explorer. On the right, click 'Advanced system settings'. Then 'Environment Variables'. Under 'System variables', highlight the 'path' field and press 'edit'. Press 'New' to add a new PATH entry. Add the bin folder for Cmake. This should be found at "C:\Program Files\Cmake\bin"
+	- To confirm that this was successful, open Command Prompt and type the command: 'cmake' without apostrophes and hit enter. You should receive information on using the program.
+
+5) install msys2 and mingw-64. These will be used for (1) compiling code with cmake, and (2) for the fortran compiler used by cmake (for eccodes) and the era52arl.f utility from HYSPLIT.
+	- Navigate to https://www.msys2.org/. Follow ALL the installation steps including the installation of the mingw-w64 GCC.
+	- As with cmake, add mingw-64 to the system PATH. If installed throug msys2, the path entry will be "C:\msys64\mingw64\bin".
+	- To test if the PATH amendment was successful by opening command prompt and typing the command 'where gcc' without apostrophes and hit enter. It should return the file path added to the system PATH environmental variable.
+	- Finally, to ensure the 'make' command can be found, go into C:\msys64\mingw64\bin. Find the program called 'mingw32-make.exe'. Copy it to the same folder, then rename the copy to 'make.exe'. 
+	- As before, open command prompt and enter 'where make'. It should return the mingw64 bin folder.
+
+6) Install libaec. The Adaptive Entropy Encoding (AEC) library is required by ECMWF eccodes for various things I don't understand. The route to installing this is (1) get source from github, (2) generate binaries with cmake, and (3) install with MinGW make
+	- Download the latest source release from https://github.com/MathisRosenhauer/libaec/releases
+	- As with ECMWF, double-unzip the tarball into a clean directory. This will act as the source directory.
+	- name the folder 'libaec-x.y.z-source'. x.y.z will be the version that you downloaded (1.0.6 for me). 
+	- create a second clean folder in the same directory and call it 'libaec-binaries'
+	- create a third folder called 'libaec'. 
+	- next, open the Cmake GUI. 
+	- Under 'Browse Source', navigate to the libaec-x.y.z-source folder. 
+	- Under 'Browse Build', navigate to the libaec-binaries folder.
+	- Click 'add entry'.
+	- Type 'CMAKE_INSTALL_PREFIX' and enter the path to the 'libaec' folder.
+	- Hit 'configure'. You should get a pop-up asking you about the generator you wish to use. Make sure you specify 'MinGW Makefiles'. Do not use Microsoft visual! This will cause problems with fortran down the line. For everything in this guide, use 'MinGW Makefiles'.
+	- Hit 'configure' again.
+	- Hit 'generate'.
+	- Exit the cmake GUI and open the msys2 msys console (search 'MSYS2 MSYS').
+	- Change the directory to the libaec-binaries folder 'cd /c/path/to/libaec-binaries'. Note the different path syntax as the language is different. 
+	- type 'make install'
+	- Ok, you should see a bunch of green and there'll be some files in your libaec folder! This means the install was successful.
+	
+7) Next, we try to install ECMWF eccodes from source. The basic steps are similar to the AEC library but there are some finnicky bits; some changes to the source code are required for Windows.
+	- First, navigate in windows explorer to the previously unpacked eccodes source folder (see step 3). 
+	- Open the 'cmake' folder, then open the 'check_os' folder. 
+	- Open the 'ecbuild_check_os.cmake' file in Notepad. 
+	- The specifics of the fix are detailed here: https://github.com/ecmwf/eccodes-python/issues/35 (see my comment in that thread)
+	- Scroll down until you reach a section that starts with ### Windows. You should see the following lines:
+#
+execute_process( COMMAND ${BASH_EXE} -c "${ECBUILD_MACROS_DIR}/ecbuild_windows_replace_symlinks.sh"
+		WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+		RESULT_VARIABLE CMD_RESULT
+		OUTPUT_VARIABLE CMD_OUTPUT
+		ERROR_VARIABLE CMD_ERROR )
+#
+	- Change these lines to the following (it is preferred not to copy paste - if you can, make the changes directly in the source file, following the formatting (space delimiting, etc.)
+#
+set (bash_cmd "bash")
+set (bash_arg -c "./cmake/ecbuild_windows_replace_symlinks.sh")
+execute_process( COMMAND ${bash_cmd} ${bash_arg}
+		WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+		RESULT_VARIABLE CMD_RESULT
+		OUTPUT_VARIABLE CMD_OUTPUT
+		ERROR_VARIABLE CMD_ERROR )
+#
+	- Ok, that should mean that Cmake correctly passes the .sh file to bash.
+	- Next, make sure Cmake can find AEC by adding an entry in the cmake GUI ('Add Entry') called 'AEC_PATH', and supplying the 'libaec' install directory from step 5. 
+
+At this point, I veer off into various troubleshooting attempts. It is a little hard to follow but as I never got this to work I haven't formatted it much. I have left it all included
+as there might be useful tidbits for would-be Windows eccodes compilation attempters. 
+
+### NEW PROBLEM FRIDAY.
+- When compiling with Unix Makefiles, I get the following message: 
+
+CMake Error at cmake/ecbuild_log.cmake:190 (message):
+  CRITICAL - C compiler C:/msys64/mingw64/bin/cc.exe does not recognise C
+  flag '/D_CRT_NONSTDC_NO_DEPRECATE'
+Call Stack (most recent call first):
+  cmake/ecbuild_add_lang_flags.cmake:116 (ecbuild_critical)
+  cmake/ecbuild_add_c_flags.cmake:40 (ecbuild_add_lang_flags)
+  CMakeLists.txt:337 (ecbuild_add_c_flags)
+
+According to this github thread https://github.com/google/benchmark/issues/297 there may be an issue with how the compiler flags are checked.
+In short, the issue is that cc.exe (which is being used as the C compiler) does not recognise the flag '/D_CRT_NONSTDC_NO_DEPRECATE'. 
+- There is a cmake file that tests whether flags are appropriate.
+- The problem thus is likely that this check is not being adequately performed. 
+
+Ok, found it. In the CMakeLists.txt at around lines ~330 there's a code block that sets several flags on windows related to suppressing warnings. This is done outside of the compiler flag compatibility checking. 
+I hashed out the following two lines:
+# ecbuild_add_c_flags("/D_CRT_NONSTDC_NO_DEPRECATE") 
+# ecbuild_add_c_flags("/wd4267")
+Next, at around line 370, I hashed:
+# ecbuild_add_c_flags("-pedantic")
+
+This allows me to build the binaries but when I use 'make install' it fails at 30%, at grib_accessor_class_data_g1second_order_general_extended_packing
+
+Here's what else I've tried:
+- with the above changes, changing the generator to MSYS Makefiles from MinGW Makefiles. This failed.
+- Next, I added "-Wno-narrowing" to the CXX flags in the CMakeLists.txt at around line 77. 
+- This allowed the make command to pass the previous errors, but did not fix them (they still occur, but are no longer fatal).
+- After this, the make fails at grib_tools.cc due to a division by two error. 
+
+This is a pretty fundamental error. I next tried dispensing with MSYS and WinGW and using the intel fortran compiler with Windows Visual 2022.
+
+Unfortunately, the Windows Visual compiler fails similarly. I gave up using Ninja (the default generator for windows) and switched to NMake:
+	- Under command line arguments to pass to cmake, use -G "NMake Makefiles"
+	- This allows you to 'make' by opening the x64 native cmd tool, cd-ing to the build dir, and then simply typing 'make'
+
+The same errors. They seem to be restricted to two files:
+	- eccodes-2.30.0-Source/src/grib_api_internal.h
+	- eccodes-2.30.0-Source/tools/grib_tools.cc
+
+Ok, so what seems to be happening is that there is a definition of COMPILE_TIME_ASSERT in grib_api_internal (see around line 175)
+	- This acts on an input, 'condition'.
+	- When COMPILE_TIME_ASSERT is called in grib_tools.cc, the condition is 0, causing a division by zero error.
+
+I decided to ask chatGPT as it is meant to be half decent at diagnosing coding issues, and it couldn't possibly 'know' less about C++ than I do (I know nothing about C++). 
+
+Here's chatGPT's answer to my question asking how the COMPILE_TIME_ASSERT application in grib_tools.cc is causing the division by zero error:
+
+### CHATGPT SEG START ###
+The error occurs because the `COMPILE_TIME_ASSERT` macro is designed to trigger a division by zero error during compilation if the specified condition is false. In the code you provided, the error is triggered by the line:
+
+```cpp
+COMPILE_TIME_ASSERT(sizeof(options->infile_offset) >= 8);
+```
+
+Let's analyze what's happening:
+
+1. The `sizeof(options->infile_offset)` expression returns the size, in bytes, of the `infile_offset` member of the `options` object.
+
+2. The condition `sizeof(options->infile_offset) >= 8` checks if the size of `infile_offset` is greater than or equal to 8 bytes.
+
+3. The `COMPILE_TIME_ASSERT` macro is invoked with the condition as its argument.
+
+4. In the second part of the macro definition, the code attempts to create an enum with a single enumerator, `assert_static__`. However, the division `(condition)` is used as the divisor, which will be evaluated during compilation.
+
+5. If the condition is true (i.e., the size is greater than or equal to 8), the division `(condition)` evaluates to a nonzero value, and the code compiles successfully.
+
+6. However, if the condition is false (i.e., the size is less than 8), the division `(condition)` attempts to divide by zero, triggering a division by zero error during compilation.
+
+Based on this analysis, it appears that the error is being triggered because the size of `options->infile_offset` is less than 8 bytes. To resolve the error, you need to ensure that `infile_offset` has a size of at least 8 bytes, or modify the condition in the `COMPILE_TIME_ASSERT` macro to reflect the correct size requirement for your specific use case.
+### CHATGPT SEG END ###
+
+### FOLLOW UP Q IN CHATGPT START###
+
+The reason for the problem you're experiencing might be related to the difference in data type sizes between Windows and non-Windows platforms, specifically regarding the options->infile_offset variable.
+
+In the code you provided, the COMPILE_TIME_ASSERT macro is used to check at compile time whether the size of options->infile_offset is at least 8 bytes. However, this check is only performed if ECCODES_ON_WINDOWS is not defined. Since you mentioned that you're compiling the code on 64-bit Windows, it's possible that ECCODES_ON_WINDOWS is defined, and as a result, the size check is skipped.
+
+On Windows, the fseeko function typically uses a different data type for file offsets compared to non-Windows platforms. It's common for Windows to use a 32-bit long type for file offsets, which is smaller than the required 64 bits.
+
+To address this issue, you have a few options:
+
+Verify that ECCODES_ON_WINDOWS is not defined properly. If it should be defined on Windows, you'll need to find an alternative solution to ensure the file offset requirement is met, considering the 32-bit long limitation.
+
+Check if your compiler supports a 64-bit file offset type on Windows, such as off64_t. If so, you can update the code to use this 64-bit file offset type instead of the default long.
+
+If your compiler does not support a 64-bit file offset type on Windows, you may need to modify your code to handle file offsets in a different way, such as using a different API or managing the file positioning manually.
+
+The specific solution will depend on your requirements, the capabilities of your compiler, and the file I/O mechanisms available on the Windows platform you're using.
+
+### FOLLOW UP Q IN CHATGPT END ###
+
+Ok, so what's up with the ECCODES_ON_WINDOWS flag not being defined? It should be defined; I'm on windows. As a result, the check should be skipped, and the issue 
+shouldn't be occurring. And yet, it is, so something is awry.
+
+As a first pass, I commented out lines 340 to 343 in the tools/grib_tools.cc file to prevent the COMPILE_TIME_ASSERT call altogether. 
+
+Next, I solved the 'lstat' error by hashing out the offending lines at around lines 630 
+
+Another compile_time_assert error had to be fixed in tools/grib_options.cc by hashing out the offending lines at around line ~253.
+
+Currently the make from command line is failing. Re-unpack the source, make the bug-fixes, then try first with the Ninja generator.
+
+I suspect simply hashing out offending lines is the definition of a bad band-aid solution, and ultimately the make is still failing.
+
+### CURRENT FLAGS and method FOR RUNNING CMAKE ###
+
+Doing this through the command-line (VS native x64 cmd) as Visual Studio GUI cmake tools refuse to build out-of-source.
+
+1) open visual studio x64 native cmd
+2) cd to source
+3) mkdir build
+4) cd build
+5) cmake with the prefixes below
+
+cmake -S C:/projects/eccodes-2.30.0-Source -D CMAKE_INSTALL_PREFIX="C:/projects/eccodes" -D AEC_DIR="C:/projects/libaec" -D AEC_LIBRARY="C:/projects/libaec/lib/libaec.a" -G "NMake Makefiles"
+
+Generator options:
+# Ninja
+-G "Ninja"
+# Visual studio 17 2022 with x64
+-G "Visual Studio 17 2022" -A x64
+# NMake
+-G "NMake Makefiles"
+
+I went to here and downloaded the Intel Base and HPC kits: https://www.intel.com/content/www/us/en/developer/tools/oneapi/toolkits.html
+
+#### REVISED GUIDE TO BUILDING ECCODES WITH VSTUDIO 2022 ###
+
+1) Make source code changes:
+	- see above regarding path to the symlinks file in check_os.cmake
+
+2) Open source folder in visual studio 2022
+	- when in source folder in windows explorer, right-click empty space and select 'open with visual studio'
+
+3) Set build/binary and install directories
+	- ensure path to eccodes-binaries is set under the options
+	- under 'advanced options' ensure the install directory is specified
+
+4) Specify command-line arguments for cmake:
+-D AEC_DIR="C:/projects/libaec" -D AEC_LIBRARY="C:/projects/libaec/lib/libaec.a"
+
+5) Specify generator as visual studio 2022 Win64. This requires the intel compilers (see above line regarding Intel Base and HPC kits)
+
+6) Configure, then generate the cache.
+
+7) Open the .sln file in the build/binary directory with visual studio and attempt the build! 
+
+For some reason, visual studio is refusing to build out of source. Building in-source transfers makelist files into the binaries and messes up the install step.
+
+USING COMMAND LINE
+1) Open x64 native command prompt for VS2022 
+2)  cd to the binary folder: cd C:/projects/eccodes-binaries
+3) generate/configure:
+cmake -S "C:/projects/eccodes-2.30.0-Source" -D CMAKE_BUILD_TYPE="Release" -D CMAKE_INSTALL_PREFIX="C:/projects/eccodes" -D AEC_DIR="C:/projects/libaec" -D AEC_LIBRARY="C:/projects/libaec/lib/libaec.a" -G "Visual Studio 17 2022" -A x64
+
+# Open source folder in visual studio
+
+# 1) Set build directory to clean binaries folder
+
+# Set install directory
+
+Still failed. Based on my googling the errors are related to parts of the eccodes code assuming a linux command line tool during building regardless of the OS being used. 
+This is an intrinsic problem that I don't have the time or skills to fix. 
+
+At this point, I decided to just use Linux. See: https://github.com/MRPHarris/compiling-era52arl/tree/main 
