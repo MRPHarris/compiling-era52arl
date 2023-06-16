@@ -101,19 +101,19 @@ Created using Linux Mint Cinnamon 21.1 (64-bit). Adjustments may be needed for o
       - Test: ‘sudo ctest’
       - Then, install: `sudo make install`
       - Next, delete the build and source directories
-            - `cd ..`
-            - `sudo rm -r build`
-            - `sudo rm -r eccodes-2.30-2-Source`
+           - `cd ..`
+           - `sudo rm -r build`
+           - `sudo rm -r eccodes-2.30-2-Source`
       - Eccodes should now be installed.
-Obtain the data2arl library from ARL and make the libhysplit.a library.
-HYSPLIT data2arl distro from https://www.ready.noaa.gov/HYSPLIT_data2arl.php
-Download the ‘https://www.ready.noaa.gov/data/web/models/hysplit4/decoders/hysplit_data2arl.zip’. I used the June 13, 2022 version.
-This is also included as standard in recent HYSPLIT distributions (look for the ‘data2arl’ folder)
-Here, I assume the folder is called ‘hysplit_data2arl’ when unzipped inside the /opt folder
-Within the data2arl folder, there are bundled conversion utilities, including era52arl. 
-The project called ‘metprog’ contains all the data needed for the libhysplit
-Open the terminal within the metprog folder.
-If hysplit_data2arl is in the /opt/ folder, `cd /opt/hysplit_data2arl/metprog/library`
+11. Obtain the data2arl library from ARL and make the libhysplit.a library.
+      - HYSPLIT data2arl distro from https://www.ready.noaa.gov/HYSPLIT_data2arl.php
+      - Download the ‘https://www.ready.noaa.gov/data/web/models/hysplit4/decoders/hysplit_data2arl.zip’. I used the June 13, 2022 version.
+      - This is also included as standard in recent HYSPLIT distributions (look for the ‘data2arl’ folder)
+      - Here, I assume the folder is called ‘hysplit_data2arl’ when unzipped inside the /opt folder
+      - Within the data2arl folder, there are bundled conversion utilities, including era52arl. 
+      - The project called ‘metprog’ contains all the data needed for the libhysplit
+      - Open the terminal within the metprog folder.
+            - If hysplit_data2arl is in the /opt/ folder, `cd /opt/hysplit_data2arl/metprog/library`
 Modify the makefile to suit your system.
 Open the Makefile inside /opt/hysplit_data2arl/metprog/library inside a suitable editor. I used Visual Studio Code. 
 If  the folder structure is left as a default, you just need to direct this makefile to the ‘include’ makefile inside the first data2arl directory. 
