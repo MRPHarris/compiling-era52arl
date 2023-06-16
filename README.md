@@ -140,21 +140,9 @@ Created using Linux Mint Cinnamon 21.1 (64-bit). Adjustments may be needed for o
       - If it is successful, run `./era52arl` inside the era52arl folder without any arguments to test the program.
       - If you receive the following error, you can try adding symlinks to the eccodes libraries inside your usr/lib/ folder. 
 > ./era52arl: error while loading shared libraries: libeccodes_f90.so: cannot open shared object file: No such file or directory
-      - To add the libraries to the usr/lib/ folder, use these lines. The syntax is `sudo ln -s [TARGET] [LINK]
 
-Ok, so here I had a problem where the era52arl program compiled, but couldn’t find the eccodes libraries when run.
+      - To add the libraries to the usr/lib/ folder, use these lines in terminal (from: https://stackoverflow.com/questions/4754633/linux-program-cant-find-shared-library-at-run-time). The syntax is `sudo ln -s [TARGET] [LINK]`
+               - `sudo ln -s /opt/eccodes/lib/libeccodes_f90.so /usr/lib/libeccodes_f90.so`
+               - `sudo ln -s /opt/eccodes/lib/libeccodes.so /usr/lib/libeccodes.so`
 
-(base) chronos@chronos-Precision-3650-Tower:/opt/hysplit_data2arl/era52arl$ ./era52arl
-./era52arl: error while loading shared libraries: libeccodes_f90.so: cannot open shared object file: No such file or directory
-
-To fix this, I explored ways to ensure shared libraries were included at runtime. This forum post seemed to suggest that the problem is that the system doesn’t know where they are (despite specifying the library locations at compile time?). Sounds similar to a system PATH variable on windows. https://stackoverflow.com/questions/4754633/linux-program-cant-find-shared-library-at-run-time
-
-As a possible solution, I ran the following lines of code to create symlinks to the eccodes libraries within the known lib paths. The syntax is sudo ln -s [TARGET] [LINK]
-`sudo ln -s /opt/eccodes/lib/libeccodes_f90.so /usr/lib/libeccodes_f90.so`
-`sudo ln -s /opt/eccodes/lib/libeccodes.so /usr/lib/libeccodes.so`
-
-SUCCESS
-
-Optional steps
-Install the open source onedrive linux client to interface with cloud storage
-https://github.com/abraunegg/onedrive - follow the OS-specific install instructions.
+At this point, I was able to successfully run the era52arl program. 
