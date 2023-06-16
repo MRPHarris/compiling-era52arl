@@ -14,9 +14,9 @@ This is theoretically possible to do all of this on Windows but I do not recomme
 Created using Linux Mint Cinnamon 21.1 (64-bit). Adjustments may be needed for other linux distributions.
 
 1. Get the eccodes tarball from https://confluence.ecmwf.int/display/ECC/Releases.
- - You’re after the most recent release’s tar
+  - You’re after the most recent release’s tar
 2. Get cmake
- - Open the terminal (ctrl + alt + T)
+  - Open the terminal (ctrl + alt + T)
  - Enter `sudo apt install cmake-qt-gui`
  - To confirm the install was successful, run `cmake-gui` in the terminal
  - Cmake should launch.
