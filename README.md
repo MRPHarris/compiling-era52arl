@@ -84,7 +84,7 @@ Created using Linux Mint Cinnamon 21.1 (64-bit). Adjustments may be needed for o
       - Change to the /opt folder
            - `cd /opt`
       - Copy the unpacked source folder from the Downloads folder to /opt
-           - `sudo cp -r ~/Downloads/eccodes-2.30.2-Source /opt/eccodes-2.30.2-Source
+           - `sudo cp -r ~/Downloads/eccodes-2.30.2-Source /opt/eccodes-2.30.2-Source`
       - Create and cd into a build folder
            - `sudo mkdir build`
            - `cd build`
