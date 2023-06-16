@@ -14,23 +14,23 @@ This is theoretically possible on Windows but I do not recommend it, as parts of
 Created using Linux Mint Cinnamon 21.1 (64-bit). Adjustments may be needed for other linux distributions.
 
 1. Get the eccodes tarball from https://confluence.ecmwf.int/display/ECC/Releases.
-- You’re after the most recent release’s tar
-Get cmake
-Open the terminal (ctrl + alt + T)
-Enter `sudo apt install cmake-qt-gui`
-To confirm the install was successful, run `cmake-gui` in the terminal
-Cmake should launch.
-From the command line, run `cmake --help`. A series of options for the cmake program should appear
-Install gfortran
-`sudo apt install gfortran`
-To confirm the installation was successful, run `which gfortran`. The install directory should be returned.
-Install AEC from https://gitlab.dkrz.de/k202009/libaec
-Get most recent tarball 
-Open terminal from inside the downloads folder
-Extract the tarball: `tar -xzf libaec-v1.0.6.tar.gz`
-Close terminal. Open a new one from inside the root directory
-Create or cd into the opt folder
-`cd /opt` or 
+ - You’re after the most recent release’s tar
+2. Get cmake
+ - Open the terminal (ctrl + alt + T)
+ - Enter `sudo apt install cmake-qt-gui`
+ - To confirm the install was successful, run `cmake-gui` in the terminal
+ - Cmake should launch.
+ - From the command line, run `cmake --help`. A series of options for the cmake program should appear
+3. Install gfortran
+ - In terminal: `sudo apt install gfortran`
+ - To confirm the installation was successful, run `which gfortran`. The install directory should be returned.
+4. Install AEC from https://gitlab.dkrz.de/k202009/libaec
+ - Get most recent tarball
+ - Open terminal from inside the downloads folder
+ - Extract the tarball: `tar -xzf libaec-v1.0.6.tar.gz`
+ - Close terminal. Open a new one from inside the root directory
+ - Create or cd into the opt folder
+  -`cd /opt` or 
 `sudo mkdir /opt` then `cd /opt`
 Copy tarball to the /opt folder: `sudo cp -r ~/Downloads/libaec-v1.0.6 /opt/libaec-v1.0.6`
 Make a build directory: `sudo mkdir build`
