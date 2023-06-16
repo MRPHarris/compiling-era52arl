@@ -119,28 +119,27 @@ Created using Linux Mint Cinnamon 21.1 (64-bit). Adjustments may be needed for o
            - If the folder structure is left as a default, you just need to direct this makefile to the ‘include’ makefile inside the first data2arl directory. 
            - To do this, change the line:
                - include ../../Makefile.inc
-To:
-include /opt/hysplit_data2arl/Makefile.inc.gfortran
-Save the Makefile
-Make the libhysplit.a library
-`sudo make`
-This should create a file called libhysplit.a inside the library folder.
-Make the era52arl program.
-This requires modifying a pair of makefiles.
-The first should be in the main hysplit_data2arl folder, called ‘Makefile.inc.gfortran’
-Various libraries are linked. Make sure the paths reflect real files on your system.
-Next, there’s the makefile inside the era52arl directory.
-First, make sure the Makefile.inc.gfortran is included. 
-To do this, change the line:
-include ../../Makefile.inc
-To:
-include /opt/hysplit_data2arl/Makefile.inc.gfortran
-Next, make sure the previously compiled hysplit library is linked. Specify ‘LIBHYS’ at that line:
-For me, LIBHYS = -L ../metprog/library -lhysplit
-At this point you can attempt to compile the program by running `sudo make` inside the era52arl folder.
-If it is successful, run `./era52arl` inside the era52arl folder without any arguments to test the program.
-If you receive the following error, you can try adding symlinks to the eccodes libraries inside your usr/lib/ folder. 
-./era52arl: error while loading shared libraries: libeccodes_f90.so: cannot open shared object file: No such file or directory
+               - To:
+               - include /opt/hysplit_data2arl/Makefile.inc.gfortran
+      - Save the Makefile
+      - Make the libhysplit.a library: `sudo make`
+      - This should create a file called libhysplit.a inside the library folder.
+12. Make the era52arl program.
+      - This requires modifying a pair of makefiles.
+      - The first should be in the main hysplit_data2arl folder, called ‘Makefile.inc.gfortran’
+           - Various libraries are linked. Make sure the paths reflect real files on your system.
+      - Next, there’s the makefile inside the era52arl directory.
+           - First, make sure the Makefile.inc.gfortran is included. 
+           - To do this, change the line:
+               - include ../../Makefile.inc
+               - To:
+               - include /opt/hysplit_data2arl/Makefile.inc.gfortran
+           - Make sure the previously compiled hysplit library is linked. Specify ‘LIBHYS’ at that line:
+               - For me, LIBHYS = -L ../metprog/library -lhysplit
+      - At this point you can attempt to compile the program by running `sudo make` inside the era52arl folder.
+      - If it is successful, run `./era52arl` inside the era52arl folder without any arguments to test the program.
+      - If you receive the following error, you can try adding symlinks to the eccodes libraries inside your usr/lib/ folder. 
+> ./era52arl: error while loading shared libraries: libeccodes_f90.so: cannot open shared object file: No such file or directory
 To add the libraries to the usr/lib/ folder, use these lines. The syntax is `sudo ln -s [TARGET] [LINK]
 
 Ok, so here I had a problem where the era52arl program compiled, but couldn’t find the eccodes libraries when run.
