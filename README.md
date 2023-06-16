@@ -97,17 +97,14 @@ Created using Linux Mint Cinnamon 21.1 (64-bit). Adjustments may be needed for o
            - Enable openjpeg: -D ENABLE_JPEG_LIBOPENJPEG=ON
            - Specify openjpeg location: -D OPENJPEG_DIR=/opt/openjpeg
       - Here’s the full line of code I used: `sudo cmake -S /opt/eccodes-2.30.2-Source -D CMAKE_INSTALL_PREFIX=/opt/eccodes -D AEC_DIR=/opt/libaec -D OPENJPEG_DIR=/opt/openjpeg`
-Next, make the build.
-`sudo make`
-Test. 
-‘sudo ctest’
-Then, install!
-`sudo make install`
-Next, delete the build and source directories
-`cd ..`
-`sudo rm -r build`
-`sudo rm -r eccodes-2.30-2-Source`
-Eccodes should now be installed.
+      - Next, make the build: `sudo make`
+      - Test: ‘sudo ctest’
+      - Then, install: `sudo make install`
+      - Next, delete the build and source directories
+            - `cd ..`
+            - `sudo rm -r build`
+            - `sudo rm -r eccodes-2.30-2-Source`
+      - Eccodes should now be installed.
 Obtain the data2arl library from ARL and make the libhysplit.a library.
 HYSPLIT data2arl distro from https://www.ready.noaa.gov/HYSPLIT_data2arl.php
 Download the ‘https://www.ready.noaa.gov/data/web/models/hysplit4/decoders/hysplit_data2arl.zip’. I used the June 13, 2022 version.
