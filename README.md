@@ -30,8 +30,8 @@ Created using Linux Mint Cinnamon 21.1 (64-bit). Adjustments may be needed for o
  - Extract the tarball: `tar -xzf libaec-v1.0.6.tar.gz`
  - Close terminal. Open a new one from inside the root directory
  - Create or cd into the opt folder
-  -`cd /opt` or 
-`sudo mkdir /opt` then `cd /opt`
+    -`cd /opt` or 
+    - `sudo mkdir /opt` then `cd /opt`
 Copy tarball to the /opt folder: `sudo cp -r ~/Downloads/libaec-v1.0.6 /opt/libaec-v1.0.6`
 Make a build directory: `sudo mkdir build`
 Cd into build directory: `cd build`
