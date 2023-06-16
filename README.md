@@ -140,7 +140,7 @@ Created using Linux Mint Cinnamon 21.1 (64-bit). Adjustments may be needed for o
       - If it is successful, run `./era52arl` inside the era52arl folder without any arguments to test the program.
       - If you receive the following error, you can try adding symlinks to the eccodes libraries inside your usr/lib/ folder. 
 > ./era52arl: error while loading shared libraries: libeccodes_f90.so: cannot open shared object file: No such file or directory
-To add the libraries to the usr/lib/ folder, use these lines. The syntax is `sudo ln -s [TARGET] [LINK]
+      - To add the libraries to the usr/lib/ folder, use these lines. The syntax is `sudo ln -s [TARGET] [LINK]
 
 Ok, so here I had a problem where the era52arl program compiled, but couldn’t find the eccodes libraries when run.
 
