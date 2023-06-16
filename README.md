@@ -13,8 +13,8 @@ This is theoretically possible on Windows but I do not recommend it, as parts of
 
 Created using Linux Mint Cinnamon 21.1 (64-bit). Adjustments may be needed for other linux distributions.
 
-Get the eccodes tarball from https://confluence.ecmwf.int/display/ECC/Releases.
-You’re after the most recent release’s tar
+1. Get the eccodes tarball from https://confluence.ecmwf.int/display/ECC/Releases.
+- You’re after the most recent release’s tar
 Get cmake
 Open the terminal (ctrl + alt + T)
 Enter `sudo apt install cmake-qt-gui`
