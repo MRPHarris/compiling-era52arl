@@ -39,7 +39,7 @@ Created using Linux Mint Cinnamon 21.1 (64-bit). Adjustments may be needed for o
            - `sudo cmake -S /opt/libaec-v1.0.6 -D CMAKE_INSTALL_PREFIX=/opt/libaec`
       - Install: `sudo make install`
       - Clean up; delete both the source and binaries from the /opt folder using e.g. `sudo rm -r /opt/build`
-5. Insall the OpenJPG library: https://github.com/uclouvain/openjpeg. Note: this may or may not be necessary; I couldn’t figure out if cmake was actually using the openjpeg library I specified. 
+5. Insall the OpenJPG library: https://github.com/uclouvain/openjpeg. Note: [this may or may not be necessary](https://github.com/MRPHarris/compiling-era52arl/issues/1). I couldn’t figure out if cmake was actually using the openjpeg library I specified. 
       - As with AEC, the method here uses cmake.
       - On the github page, click on code -> download .zip
       - Extract the archive inside the Downloads folder (this can either be done in the GUI or using e.g. unzip).
@@ -64,7 +64,7 @@ Created using Linux Mint Cinnamon 21.1 (64-bit). Adjustments may be needed for o
       - `sudo apt-get install libnetcdf-dev`
 8. Install git.
       - `sudo apt-get install git`
-9. Install miniconda and numpy.
+9. Install miniconda and numpy. This [may not be necessary](https://github.com/MRPHarris/compiling-era52arl/issues/1) if you already have python installed on your system.
       - Follow https://conda.io/projects/conda/en/stable/user-guide/install/linux.html.
       - Download the latest .sh file for linux
       - Open the terminal in the downloads folder
