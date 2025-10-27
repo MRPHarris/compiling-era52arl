@@ -144,4 +144,4 @@ Created using Linux Mint Cinnamon 21.1 (64-bit). Adjustments may be needed for o
            - `sudo ln -s /opt/eccodes/lib/libeccodes_f90.so /usr/lib/libeccodes_f90.so`
            - `sudo ln -s /opt/eccodes/lib/libeccodes.so /usr/lib/libeccodes.so`
 
-At this point, I was able to successfully run the era52arl program. 
+At this point, I was able to successfully run the era52arl program. Note that era52arl has some [syntax differences](https://github.com/MRPHarris/compiling-era52arl/issues/2) to many command line tools.
